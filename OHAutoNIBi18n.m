@@ -8,6 +8,10 @@
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
 
+
+
+
+
 static inline NSString* localizedString(NSString* aString);
 
 static inline void localizeUIBarButtonItem(UIBarButtonItem* bbi);
@@ -98,7 +102,17 @@ static inline NSString* localizedString(NSString* aString)
     }
     return tr;
 #else
-    return [[NSBundle mainBundle] localizedStringForKey:aString value:nil table:nil];
+    NSString *result = [[NSBundle mainBundle] localizedStringForKey:aString value:nil table:nil];
+
+#if OHAutoNIBi18n_RESCUE
+    if (!result || [result isEqualToString:@""]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:OHAutoNIBi18n_RESCUE_LANG ofType:@"lproj"];
+        NSBundle *englishBundle = [NSBundle bundleWithPath:path];
+        return [englishBundle localizedStringForKey:aString value:@"" table:nil];
+    }
+#else
+    return result;
+#endif
 #endif
 }
 
