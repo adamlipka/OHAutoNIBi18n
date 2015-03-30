@@ -28,10 +28,31 @@ static inline void localizeUIViewController(UIViewController* vc);
 
 // ------------------------------------------------------------------------------------------------
 
+@interface NSBundle (rescueLang)
+-(NSString *)rescueLocalizedString:(NSString *)key;
+@end
+
+
 @interface NSObject(OHAutoNIBi18n)
 -(void)localizeNibObject;
 @end
 
+
+@implementation NSBundle (rescueLang)
+
+-(NSString *)rescueLocalizedString:(NSString *)key {
+
+    NSString *result = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:nil];
+
+    if (!result || [result isEqualToString:@""]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"en" ofType:@"lproj"];
+        NSBundle *englishBundle = [NSBundle bundleWithPath:path];
+        return [englishBundle localizedStringForKey:key value:@"" table:nil];
+    }
+    return result;
+}
+
+@end
 
 @implementation NSObject(OHAutoNIBi18n)
 

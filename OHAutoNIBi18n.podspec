@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.prefix_header_contents = <<-EOS
 #define OHAutoNIBi18n_DEBUG 0
-#define OHAutoNIBi18n_RESCUE 0
+#define OHAutoNIBi18n_RESCUE 1
 #define OHAutoNIBi18n_RESCUE_LANG @"en"
   EOS
 

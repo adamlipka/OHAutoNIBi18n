@@ -11,6 +11,10 @@
     #define _T(key) NSLocalizedString((key),@"")
 #endif
 
+#ifndef XTBLocalize
+    #define XTBLocalize(key) [[NSBundle mainBundle] rescueLocalizedString:(key)]
+#endif
+
 /*! Use NSLocalizedString representing a format string */
 #ifndef _Tf
     #define _Tf(key,...) [NSString stringWithFormat:_T(key),__VA_ARGS__]
