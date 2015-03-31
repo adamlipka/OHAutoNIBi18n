@@ -6,6 +6,10 @@
 //
 //
 
+@interface NSBundle (rescueLang)
+    -(NSString *)rescueLocalizedString:(NSString *)key;
+@end
+
 /*! Shorthand for NSLocalizedString */
 #ifndef _T
     #define _T(key) NSLocalizedString((key),@"")

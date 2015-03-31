@@ -28,9 +28,6 @@ static inline void localizeUIViewController(UIViewController* vc);
 
 // ------------------------------------------------------------------------------------------------
 
-@interface NSBundle (rescueLang)
--(NSString *)rescueLocalizedString:(NSString *)key;
-@end
 
 
 @interface NSObject(OHAutoNIBi18n)
@@ -42,10 +39,10 @@ static inline void localizeUIViewController(UIViewController* vc);
 
 -(NSString *)rescueLocalizedString:(NSString *)key {
 
-    NSString *result = [[NSBundle mainBundle] localizedStringForKey:key value:nil table:nil];
+    NSString *result = [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:nil];
 
-    if (!result || [result isEqualToString:@""]) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"en" ofType:@"lproj"];
+    if (!result || [result isEqualToString:@""] || [result isEqualToString:key]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:OHAutoNIBi18n_RESCUE_LANG ofType:@"lproj"];
         NSBundle *englishBundle = [NSBundle bundleWithPath:path];
         return [englishBundle localizedStringForKey:key value:@"" table:nil];
     }
@@ -101,11 +98,11 @@ static inline NSString* localizedString(NSString* aString)
 {
     if (aString == nil || [aString length] == 0)
         return aString;
-    
+
     // Don't translate strings starting with a digit
     if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[aString characterAtIndex:0]])
         return aString;
-    
+
 #if OHAutoNIBi18n_DEBUG
 #warning Debug mode for i18n is active
     static NSString* const kNoTranslation = @"$!";
@@ -123,18 +120,9 @@ static inline NSString* localizedString(NSString* aString)
     }
     return tr;
 #else
-    NSString *result = [[NSBundle mainBundle] localizedStringForKey:aString value:nil table:nil];
-
-#if OHAutoNIBi18n_RESCUE
-    if (!result || [result isEqualToString:@""]) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:OHAutoNIBi18n_RESCUE_LANG ofType:@"lproj"];
-        NSBundle *englishBundle = [NSBundle bundleWithPath:path];
-        return [englishBundle localizedStringForKey:aString value:@"" table:nil];
-    }
-#else
+    NSString *result = [[NSBundle mainBundle] rescueLocalizedString:aString];
+#endif
     return result;
-#endif
-#endif
 }
 
 
