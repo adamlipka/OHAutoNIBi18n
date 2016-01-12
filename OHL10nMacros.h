@@ -5,6 +5,7 @@
 //  Created by Olivier Halligon on 03/09/13.
 //
 //
+#import <Foundation/Foundation.h>
 
 @interface NSBundle (rescueLang)
     -(NSString *)rescueLocalizedString:(NSString *)key;
