@@ -22,8 +22,9 @@ Pod::Spec.new do |s|
   s.author       = { "Olivier Halligon" => "olivier.halligon+ae@gmail.com" }
 
 
-  s.platform     = :ios, '4.3'
+  s.ios.platform     = :ios, '4.3'
 
+  s.watchos.platform = :watchos, '2.0'
 
   s.source       = { :git => "https://github.com/AliSoftware/OHAutoNIBi18n.git", :tag => s.version.to_s }
   
