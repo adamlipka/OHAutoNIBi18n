@@ -16,22 +16,19 @@
       "ios": "4.3",
       "watchos": "2.0"
   },
+  "prefix_header_contents": ["#define OHAutoNIBi18n_DEBUG 0",
+                            "#define OHAutoNIBi18n_RESCUE 1",
+                            "#define OHAutoNIBi18n_RESCUE_LANG @\"en\""],
   "ios": {
     "frameworks": ["UIKit"],
       "source_files": ["OHL10nMacros.h",
         "OHAutoNIBi18n.m",
         "OHAutoNIBiOS.m"
-      ],
-      "prefix_header_contents": ["#define OHAutoNIBi18n_DEBUG 0",
-                                "#define OHAutoNIBi18n_RESCUE 1",
-                                "#define OHAutoNIBi18n_RESCUE_LANG @\"en\""]
+      ]
     },
   "watchos": {
       "source_files": ["OHL10nMacros.h",
         "OHAutoNIBi18n.m"
-      ],
-      "prefix_header_contents": ["#define OHAutoNIBi18n_DEBUG 0",
-                                "#define OHAutoNIBi18n_RESCUE 1",
-                                "#define OHAutoNIBi18n_RESCUE_LANG @\"en\""]
+      ]
     }
   }
