@@ -1,0 +1,23 @@
+//
+//  watchExtension.pch
+//  OHAutoNIBi18n
+//
+//  Created by Adam Lipka on 07.03.2016.
+//
+//
+
+#ifndef watchExtension_pch
+#define watchExtension_pch
+
+
+#import <Foundation/Foundation.h>
+#import <WatchKit/WatchKit.h>
+
+#define OHAutoNIBi18n_DEBUG 1
+#define OHAutoNIBi18n_RESCUE_LANG @"en"
+
+#import "OHL10nMacros.h"
+
+#endif /* watchExtension_pch */
+
+

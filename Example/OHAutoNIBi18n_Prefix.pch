@@ -9,5 +9,6 @@
 
 
 #define OHAutoNIBi18n_DEBUG 1
+#define OHAutoNIBi18n_RESCUE_LANG @"en"
 
 #import "OHL10nMacros.h"
