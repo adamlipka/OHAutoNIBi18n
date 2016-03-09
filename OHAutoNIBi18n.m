@@ -38,9 +38,9 @@
 @implementation NSBundle (rescueLang)
 
 -(NSString *)rescueLocalizedString:(NSString *)key {
-    
+
     NSString *result = [[NSBundle mainBundle] localizedStringForKey:key value:@"" table:nil];
-    
+
     if (!result || [result isEqualToString:@""] || [result isEqualToString:key]) {
         NSString *path = [[NSBundle mainBundle] pathForResource:OHAutoNIBi18n_RESCUE_LANG ofType:@"lproj"];
         NSBundle *englishBundle = [NSBundle bundleWithPath:path];
