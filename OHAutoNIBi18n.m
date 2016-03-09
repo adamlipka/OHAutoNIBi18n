@@ -28,7 +28,6 @@
         Method localizeNibObject = class_getInstanceMethod([NSObject class], @selector(localizeNibObject));
         Method awakeFromNib = class_getInstanceMethod([NSObject class], @selector(awakeFromNib));
         method_exchangeImplementations(awakeFromNib, localizeNibObject);
-//        NSLog(@"sddasdas %@", [[self class] debugDescription]);
     });
 }
 @end
