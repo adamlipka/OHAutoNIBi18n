@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
+#import "OHL10nMacros.h"
 
 static inline NSString* localizedString(NSString* aString);
 
@@ -39,7 +39,7 @@ static inline void localizeUIViewController(UIViewController* vc);
     else LocalizeIfClass(UITextField);
     else LocalizeIfClass(UITextView);
     else LocalizeIfClass(UIViewController);
-    
+
     if (![self isKindOfClass:UITableView.class] && (self.isAccessibilityElement == YES))
     {
         // Security to avoid translating tableView's accessibilityLabel & accessibilityHint
@@ -48,7 +48,7 @@ static inline void localizeUIViewController(UIViewController* vc);
         self.accessibilityLabel = localizedString(self.accessibilityLabel);
         self.accessibilityHint = localizedString(self.accessibilityHint);
     }
-    
+
     // Call the original awakeFromNib method
     [self localizeNibObject]; // this actually calls the original awakeFromNib (and not localizeNibObject) because we did some method swizzling
 }
@@ -66,11 +66,11 @@ static inline NSString* localizedString(NSString* aString)
 {
     if (aString == nil || [aString length] == 0)
         return aString;
-    
+
     // Don't translate strings starting with a digit
     if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[aString characterAtIndex:0]])
         return aString;
-    
+
 #if OHAutoNIBi18n_DEBUG
 #warning Debug mode for i18n is active
     static NSString* const kNoTranslation = @"$!";
@@ -88,13 +88,15 @@ static inline NSString* localizedString(NSString* aString)
     }
     return tr;
 #else
-    return [[NSBundle mainBundle] localizedStringForKey:aString value:nil table:nil];
+    NSString *result = [[NSBundle mainBundle] rescueLocalizedString:aString];
 #endif
+    return result;
 }
+
 
 static inline void localizeUIBarButtonItem(UIBarButtonItem* bbi) {
     localizeUIBarItem(bbi); /* inheritence */
-    
+
     NSMutableSet* locTitles = [[NSMutableSet alloc] initWithCapacity:[bbi.possibleTitles count]];
     for(NSString* str in bbi.possibleTitles) {
         [locTitles addObject:localizedString(str)];
@@ -116,7 +118,7 @@ static inline void localizeUIButton(UIButton* btn) {
         [btn titleForState:UIControlStateDisabled],
         [btn titleForState:UIControlStateSelected]
     };
-    
+
     [btn setTitle:localizedString(title[0]) forState:UIControlStateNormal];
     if (title[1] == [btn titleForState:UIControlStateHighlighted])
         [btn setTitle:localizedString(title[1]) forState:UIControlStateHighlighted];
@@ -139,7 +141,7 @@ static inline void localizeUISearchBar(UISearchBar* sb) {
     sb.placeholder = localizedString(sb.placeholder);
     sb.prompt = localizedString(sb.prompt);
     sb.text = localizedString(sb.text);
-    
+
     NSMutableArray* locScopesTitles = [[NSMutableArray alloc] initWithCapacity:[sb.scopeButtonTitles count]];
     for(NSString* str in sb.scopeButtonTitles) {
         [locScopesTitles addObject:localizedString(str)];
