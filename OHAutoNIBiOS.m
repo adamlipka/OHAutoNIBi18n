@@ -87,6 +87,7 @@ static inline NSString* localizedString(NSString* aString)
     NSString *result;
     OHNormalizationResult *normalizationResult = normalizeString(aString);
     NSString *normalizedString = normalizationResult.normalizedString;
+    OHCapitalisationOption option = normalizationResult.caseOption;
 #if OHAutoNIBi18n_DEBUG
 #warning Debug mode for i18n is active
     static NSString* const kNoTranslation = @"$!";
@@ -102,8 +103,6 @@ static inline NSString* localizedString(NSString* aString)
         NSLog(@"No translation for string '%@'",normalizedString);
         tr = [NSString stringWithFormat:@"$%@$",normalizedString];
     }
-    OHCapitalisationOption option = normalizationResult.caseOption;
-
     tr = changedCaseOption(tr, option);
 
     return tr;
