@@ -10,7 +10,14 @@
 #import <UIKit/UIKit.h>
 #import "OHL10nMacros.h"
 
+
+NSString *const uppercaseSuffix = @"_case_uppercase";
+NSString *const lowercaseSuffix = @"_case_lowercase";
+
+static inline OHNormalizationResult* normalizeString(NSString* aString);
 static inline NSString* localizedString(NSString* aString);
+static inline NSString *changedCaseOption(NSString *tr, OHCapitalisationOption option);
+
 
 static inline void localizeUIBarButtonItem(UIBarButtonItem* bbi);
 static inline void localizeUIBarItem(UIBarItem* bi);
@@ -24,7 +31,13 @@ static inline void localizeUITextView(UITextView* tv);
 static inline void localizeUIViewController(UIViewController* vc);
 
 
+
+@implementation OHNormalizationResult
+@end
+
+
 @implementation NSObject(OHAutoNIBi18niOS)
+
 
 #define LocalizeIfClass(Cls) if ([self isKindOfClass:[Cls class]]) localize##Cls((Cls*)self)
 -(void)localizeNibObject
@@ -71,25 +84,62 @@ static inline NSString* localizedString(NSString* aString)
     if ([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[aString characterAtIndex:0]])
         return aString;
 
+    NSString *result;
+    OHNormalizationResult *normalizationResult = normalizeString(aString);
+    NSString *normalizedString = normalizationResult.normalizedString;
 #if OHAutoNIBi18n_DEBUG
 #warning Debug mode for i18n is active
     static NSString* const kNoTranslation = @"$!";
-    NSString* tr = [[NSBundle mainBundle] localizedStringForKey:aString value:kNoTranslation table:nil];
+    NSString* tr = [[NSBundle mainBundle] localizedStringForKey:normalizedString value:kNoTranslation table:nil];
     if ([tr isEqualToString:kNoTranslation])
     {
-        if ([aString hasPrefix:@"."])
+        if ([normalizedString hasPrefix:@"."])
         {
             // strings in XIB starting with '.' are typically used as temporary placeholder for design
             // and will be replaced by code later, so don't warn about them
-            return aString;
+            return normalizedString;
         }
-        NSLog(@"No translation for string '%@'",aString);
-        tr = [NSString stringWithFormat:@"$%@$",aString];
+        NSLog(@"No translation for string '%@'",normalizedString);
+        tr = [NSString stringWithFormat:@"$%@$",normalizedString];
     }
+    OHCapitalisationOption option = normalizationResult.caseOption;
+
+    tr = changedCaseOption(tr, option);
+
     return tr;
 #else
-    NSString *result = [[NSBundle mainBundle] rescueLocalizedString:aString];
+    result = [[NSBundle mainBundle] rescueLocalizedString:normalizedString];
+    result = changedCaseOption(result, option);
 #endif
+    return result;
+}
+
+NSString *changedCaseOption(NSString *tr, OHCapitalisationOption option) {
+    switch (option) {
+
+        case OHCapitalisationOptionDefault:break;
+        case OHCapitalisationOptionUppercase:
+            tr = [tr uppercaseString];
+            break;
+        case OHCapitalisationOptionLowercase:
+            tr = [tr lowercaseString];
+            break;
+    }
+    return tr;
+}
+
+static inline OHNormalizationResult* normalizeString(NSString* aString) {
+    OHNormalizationResult *result = [OHNormalizationResult new];
+    if ([aString rangeOfString:uppercaseSuffix].location != NSNotFound) {
+        result.caseOption = OHCapitalisationOptionUppercase;
+        result.normalizedString = [aString stringByReplacingOccurrencesOfString:uppercaseSuffix withString:@""];
+    } else if ([aString rangeOfString:lowercaseSuffix].location != NSNotFound) {
+        result.caseOption = OHCapitalisationOptionLowercase;
+        result.normalizedString = [aString stringByReplacingOccurrencesOfString:lowercaseSuffix withString:@""];
+    } else {
+        result.caseOption = OHCapitalisationOptionDefault;
+        result.normalizedString = aString;
+    }
     return result;
 }
 

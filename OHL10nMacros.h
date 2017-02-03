@@ -7,6 +7,21 @@
 //
 #import <Foundation/Foundation.h>
 
+
+
+
+typedef NS_ENUM(NSUInteger, OHCapitalisationOption) {
+    OHCapitalisationOptionDefault = 0,
+    OHCapitalisationOptionUppercase,
+    OHCapitalisationOptionLowercase
+};
+
+@interface OHNormalizationResult : NSObject
+@property OHCapitalisationOption caseOption;
+@property NSString *normalizedString;
+@end
+
+
 @interface NSBundle (rescueLang)
     -(NSString *)rescueLocalizedString:(NSString *)key;
 @end
